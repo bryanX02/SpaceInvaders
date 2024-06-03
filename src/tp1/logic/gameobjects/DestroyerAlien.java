@@ -1,7 +1,6 @@
 package tp1.logic.gameobjects;
 
 import tp1.logic.AlienManager;
-import tp1.logic.Game;
 import tp1.logic.Move;
 import tp1.logic.Position;
 import tp1.view.Messages;
@@ -31,14 +30,14 @@ public class DestroyerAlien extends AlienShip{
 			canShootBomb = true;
 		}
 		
-		// Función que devuelve los puntos que otorga la eliminación del alien
+		// Funciï¿½n que devuelve los puntos que otorga la eliminaciï¿½n del alien
 		@Override
 		public int getPoints() {
 			// TODO Auto-generated method stub
 			return POINTS;
 		}
 		
-		// Función que devuelve el daño que provoca el alien
+		// Funciï¿½n que devuelve el daï¿½o que provoca el alien
 		@Override
 		public int getDamage() {
 			// TODO Auto-generated method stub
@@ -63,14 +62,14 @@ public class DestroyerAlien extends AlienShip{
 			return ARMOR;
 		}
 
-		// Método que simula la acción del alien
+		// Mï¿½todo que simula la acciï¿½n del alien
 		@Override
 		public void computerAction() {
 			
 			// Si puede disparar y el random lo permite
 			if (canShootBomb && canGenerateRandomBomb()) {
 				
-				// Se crea y se añade la bomba al juego
+				// Se crea y se aï¿½ade la bomba al juego
 				game.addObject(new Bomb(this, game));
 				canShootBomb = false;
 				
@@ -78,7 +77,7 @@ public class DestroyerAlien extends AlienShip{
 				
 		}
 		
-		// Función booleana respecto a un Random para decidir si se lanza una bomba
+		// Funciï¿½n booleana respecto a un Random para decidir si se lanza una bomba
 		private boolean canGenerateRandomBomb () {
 			double random;
 			random = game.getRandom().nextDouble();
@@ -120,14 +119,14 @@ public class DestroyerAlien extends AlienShip{
 			
 		}
 
-		// Método que desciende un alien y cambia su dirección
+		// Mï¿½todo que desciende un alien y cambia su direcciï¿½n
 		private void descent() {
 			
 			performMovement(Move.DOWN);
 			dir = dir.flip();
 		}
 
-		// Método que realiza el movimiento pasado por parametro
+		// Mï¿½todo que realiza el movimiento pasado por parametro
 		private void performMovement(Move dir) {
 			
 			pos = pos.move(dir);
@@ -139,13 +138,13 @@ public class DestroyerAlien extends AlienShip{
 			
 		}
 
-		// Método que avisa al manager de que el alien murio
+		// Mï¿½todo que avisa al manager de que el alien murio
 		@Override
 		public void die() {
 			alienManager.destroyerAlienDead();	
 		}
 
-		// Función boolena respecto a si el alien esta en la última fila
+		// Funciï¿½n boolena respecto a si el alien esta en la ï¿½ltima fila
 		private boolean isInFinalRow() {
 			return pos.getRow() == 7;			
 		}
@@ -155,7 +154,7 @@ public class DestroyerAlien extends AlienShip{
 			return getSymbol() + "[" + String.format("%02d", life) + "]";
 		}
 
-		// Método que habilita el disparo de la bomba
+		// Mï¿½todo que habilita el disparo de la bomba
 		public void enableBomb() {
 			
 			canShootBomb = true;

@@ -2,7 +2,6 @@ package tp1.control.commands;
 
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
-import tp1.view.GameStatus;
 import tp1.view.Messages;
 
 public class HelpCommand extends NoParamsCommand {
@@ -27,7 +26,7 @@ public class HelpCommand extends NoParamsCommand {
 		return Messages.COMMAND_HELP_HELP;
 	}
 
-	// Ejecuta la acción del comando, modificando el juego.
+	// Ejecuta la acciï¿½n del comando, modificando el juego.
 	@Override
 	public ExecutionResult execute(GameModel game) {
 		System.out.println(Messages.HELP_AVAILABLE_COMMANDS);

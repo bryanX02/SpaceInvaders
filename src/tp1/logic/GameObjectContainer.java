@@ -50,7 +50,7 @@ public class GameObjectContainer {
 		}
 	}
 
-	// Función que devuelve el objeto de la lista que tenga la posición dada por parámetro
+	// Funciï¿½n que devuelve el objeto de la lista que tenga la posiciï¿½n dada por parï¿½metro
 	public GameObject getObjFromPos(Position pos) {
 		
 		// Variables
@@ -58,7 +58,7 @@ public class GameObjectContainer {
 		boolean encontrado = false;
 		int i = 0;
 		
-		// Se busca el alien en la posición, y si no lo encuentra se recibe un null
+		// Se busca el alien en la posiciï¿½n, y si no lo encuentra se recibe un null
 		while (i < objects.size() && !encontrado) {
 			
 			if (objects.get(i).isOnPosition(pos))
@@ -74,7 +74,7 @@ public class GameObjectContainer {
 		
 	}
 	
-	// Método que comprueba para cada alien o bomba si fue atacado por el laser o el shockWave
+	// Mï¿½todo que comprueba para cada alien o bomba si fue atacado por el laser o el shockWave
 	public void checkAttacks(UCMWeapon weapon) {
 		
 		if (weapon.isAlive()) {	
@@ -100,7 +100,7 @@ public class GameObjectContainer {
 		
 	}  
 	
-	// Método que comprueba para cada alien o bomba si fue atacado por el laser o el shockWave
+	// Mï¿½todo que comprueba para cada alien o bomba si fue atacado por el laser o el shockWave
 	public void checkAttacks(EnemyWeapon weapon) {
 		
 		if (weapon.isAlive()) {	
@@ -126,7 +126,7 @@ public class GameObjectContainer {
 		
 	}  
 	
-	// Método que elimina el alien que este muerto (su vida = 0)
+	// Mï¿½todo que elimina el alien que este muerto (su vida = 0)
 	public void removeDead() {
 	
 		if (deadObjects > 0) {
@@ -139,7 +139,6 @@ public class GameObjectContainer {
 			}
 
 		}
-		System.out.println(objects.size());
 	}
 	
 }

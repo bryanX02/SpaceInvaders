@@ -14,5 +14,6 @@ public interface GameModel {
 	public void reset();
 	public void exit();
 	public Random getRandom();
+	public String infoToString();
 	
 }

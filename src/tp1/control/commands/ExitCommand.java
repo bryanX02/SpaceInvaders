@@ -2,7 +2,6 @@ package tp1.control.commands;
 
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
-import tp1.view.GameStatus;
 import tp1.view.Messages;
 
 public class ExitCommand extends NoParamsCommand{

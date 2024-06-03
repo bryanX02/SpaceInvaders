@@ -5,11 +5,11 @@ import java.util.List;
 
 public class CommandGenerator {
 
-	private static final List<Command> availableCommands = Arrays.asList(
+	private static final List<Command> AVAILABLE_COMMANDS = Arrays.asList(
 		new HelpCommand(),
 		new MoveCommand(),
 		new ExitCommand(),
-		new NoneCommand(),
+		new UpdateCommand(),
 		new ListCommand(),
 		new ResetCommand(),
 		new ShootCommand(),
@@ -19,24 +19,23 @@ public class CommandGenerator {
 	public static Command parse(String[] commandWords) {	
 		
 		Command command = null;
+		int i = 0;
 		
-		for (Command c: availableCommands) {
-			if (c.matchCommandName(commandWords[0])) {
-				
-				command = c.parse(commandWords);
-				// Se parsea el comando por si tiene varios parametros
-				// Si devolviese un nulo seria un comando sin parametros
-				if (command == null) {
-					// Se guarda el comando sin parametros
-					command = c;
-				}
-			}
+		while (i < AVAILABLE_COMMANDS.size() && command == null) {
+			
+			// Primero se instancia al comando que comprobaremos
+			command = AVAILABLE_COMMANDS.get(i++);
+			
+			// Y ahora se emplea su parse para avergiar si realmente corresponde al de los paremetros
+			// A su vez, este comando estará instanciado correctamente o volverá a ser null si no era el comando buscado
+			command = command.parse(commandWords);
+			
 		}
 		
 		// Para tener en cuenta el none cuando no escriben nada
 		if (command == null) {
 			if (commandWords[0] == "")
-				command = availableCommands.get(3);
+				command = AVAILABLE_COMMANDS.get(3);
 		}
 		
 		return command;
@@ -44,8 +43,8 @@ public class CommandGenerator {
 		
 	public static String commandHelp() {
 		StringBuilder commands = new StringBuilder();	
-		for (Command c: availableCommands) {
-			commands.append(c.getHelp());
+		for (Command c: AVAILABLE_COMMANDS) {
+			commands.append(c.helpText());
 		}
 		return commands.toString();
 	}

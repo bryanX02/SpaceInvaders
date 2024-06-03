@@ -70,14 +70,14 @@ public class MoveCommand extends Command {
 		
 		if (commandWords.length != 2) {
 			paramError = true;
-			comando = this;
+			comando = null;
 		} else {
 			paramError = false;
 			directionError = null;
 			// Se emplea un try catch para tener en cuenta un error del valueOf
 			try {
 	
-				// Se obtiene la dirección del movimiento mediante Move.parse,
+				// Se obtiene la direcciï¿½n del movimiento mediante Move.parse,
 				// y con el se crea el comando completo
 				comando = new MoveCommand(Move.parse(commandWords[1]));
 

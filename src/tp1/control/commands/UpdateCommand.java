@@ -32,12 +32,4 @@ public class UpdateCommand extends NoParamsCommand{
 		return Messages.COMMAND_NONE_HELP;
 	}
 
-	@Override
-	public Command parse(String[] commandWords) {
-		// TODO Auto-generated method stub
-		return super.parse(commandWords);
-	}
-	
-	
-
 }

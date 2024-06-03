@@ -2,16 +2,9 @@ package tp1.control.commands;
 
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
-import tp1.view.GameStatus;
 import tp1.view.Messages;
 
 public class ListCommand extends NoParamsCommand{
-		  		
-		
-		public ExecutionResult execute(GameStatus game) {
-			System.out.println(game.infoToString());
-			return new ExecutionResult(false);
-		}
 
 		@Override
 		protected String getName() {
@@ -35,8 +28,8 @@ public class ListCommand extends NoParamsCommand{
 
 		@Override
 		public ExecutionResult execute(GameModel game) {
-			// TODO Auto-generated method stub
-			return null;
+			System.out.println(game.infoToString());
+			return new ExecutionResult(false);
 		}
 
 	}

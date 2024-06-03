@@ -6,9 +6,7 @@ import java.util.Scanner;
 
 import tp1.control.commands.Command;
 import tp1.control.commands.CommandGenerator;
-import tp1.control.commands.ListCommand;
 import tp1.logic.Game;
-import tp1.logic.Move;
 import tp1.view.GamePrinter;
 import tp1.view.GameStatus;
 import tp1.view.Messages;
@@ -18,13 +16,13 @@ import tp1.view.Messages;
  */
 public class Controller {
 
-	private GameModel model;
+	private GameModel game;
 	private GameStatus status;
 	private Scanner scanner;
 	private GamePrinter printer;
 
 	public Controller(Game game, Scanner scanner) {
-		this.model = game;
+		this.game = game;
 		this.status = game;
 		this.scanner = scanner;
 		printer = new GamePrinter(status);
@@ -52,20 +50,16 @@ public class Controller {
 
 		printGame();
 
-		while (!model.isFinished()) {
+		while (!game.isFinished()) {
+			
 			String[] parameters = prompt();
 
 			Command command = CommandGenerator.parse(parameters);
 			
 			if (command != null) {
-				ListCommand list = new ListCommand();
-				ExecutionResult result;
 				
-				if (command.equals(list))
-					result = list.execute(status);
-				else
-					result = command.execute(model);
-				
+				ExecutionResult result;	
+				result = command.execute(game);
 				 if (result.success()) { 
 		            if (result.draw()) 
 		                printGame();

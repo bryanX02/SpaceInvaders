@@ -47,7 +47,6 @@ public class GamePrinter {
 	public String toString() {
 		
 		StringBuilder str = new StringBuilder();
-		System.out.println();
 	
 		// Game Status
 		str.append(getInfo());
