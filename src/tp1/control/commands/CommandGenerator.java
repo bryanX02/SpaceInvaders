@@ -39,6 +39,7 @@ public class CommandGenerator {
 				// Y ahora se emplea su parse para avergiar si realmente corresponde al de los paremetros
 				// A su vez, este comando estará instanciado correctamente o volverá a ser null si no era el comando buscado
 				command = command.parse(commandWords);
+				
 			}
 		
 		}

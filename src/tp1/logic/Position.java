@@ -36,12 +36,12 @@ public class Position {
 	}
 
 	
-	// Método que ejecuta el movimiento pasado por parametro
+	// Mï¿½todo que ejecuta el movimiento pasado por parametro
 	public Position move(Move move) {
 		return new Position(col + move.getX(), row + move.getY());
 	}
 
-	// Función booleana respecto a si la posición esta en el borde del tablero
+	// Funciï¿½n booleana respecto a si la posiciï¿½n esta en el borde del tablero
 	public boolean isOnBorder() {
 		
 		boolean is = false;
@@ -52,7 +52,7 @@ public class Position {
 		return is;
 	}
 	
-	// Función booleana respecto a la equivalencia con otra posición pasada por parametro
+	// Funciï¿½n booleana respecto a la equivalencia con otra posiciï¿½n pasada por parametro
 	public boolean equals(Position pos) {
 
 		// Variablees
@@ -64,7 +64,7 @@ public class Position {
 		return result;
 	}
 
-	// Función booleana respecto a si la posición esta fuera del tablero
+	// Funciï¿½n booleana respecto a si la posiciï¿½n esta fuera del tablero
 	public boolean isOut() {
 
 		// Variablees
@@ -76,5 +76,11 @@ public class Position {
 		return result;
 	}
 
+	@Override
+	public String toString() {
+		return "(" + col + ", " + row + ")";
+	}
+
+	
 	
 }

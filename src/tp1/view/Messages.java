@@ -155,8 +155,8 @@ public class Messages {
 	
 	public static final String COMMAND_RESET_NAME = "reset";
 	public static final String COMMAND_RESET_SHORTCUT = "r";
-	public static final String COMMAND_RESET_DETAILS = "[r]eset [<" + InitialConfiguration.all("|") + ">]";
-	public static final String COMMAND_RESET_HELP = "resets the game";
+	public static final String COMMAND_RESET_DETAILS = "[r]eset [filename]";
+	public static final String COMMAND_RESET_HELP = "resets the game using the initial configuration in file filename. If no file is given the standard configuration is used";
 
 	public static final String COMMAND_SHOCKWAVE_NAME = "shockwave";
 	public static final String COMMAND_SHOCKWAVE_SHORTCUT = "w";

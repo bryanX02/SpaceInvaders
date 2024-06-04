@@ -2,6 +2,7 @@ package tp1.control.commands;
 
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
+import tp1.control.exceptions.NotEnoughPointsException;
 import tp1.view.Messages;
 
 public class SuperLaserCommand extends NoParamsCommand{
@@ -29,16 +30,14 @@ public class SuperLaserCommand extends NoParamsCommand{
 	@Override
 	public ExecutionResult execute(GameModel game) {
 		
-		boolean result = game.shootSuperLaser();
-		ExecutionResult exeResult;
 		
-		if (result) {
+		try {
+			game.shootSuperLaser();
 			game.update();
-			exeResult = new ExecutionResult(result);
-		} else
-			exeResult = new ExecutionResult(Messages.SUPERLASER_ERROR);
-
-		return exeResult;
+			return new ExecutionResult(true);
+		} catch (NotEnoughPointsException e) {
+            return new ExecutionResult(e.getMessage());
+        }
 	}
 
 }

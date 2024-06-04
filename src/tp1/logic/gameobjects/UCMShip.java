@@ -152,6 +152,11 @@ public class UCMShip extends Ship{
 		game.addObject(new SuperLaser(pos, game, ARMOR));
 		
 	}
+
+	public boolean isAllowedMove(Move move) {
+		// TODO Auto-generated method stub
+		return move != Move.DOWN && move != Move.UP;
+	}
 	
 
 	

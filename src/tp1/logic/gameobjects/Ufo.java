@@ -83,7 +83,7 @@ public class Ufo extends EnemyShip{
 		
 	}
 
-	private void receiveAttack(int damage) {
+	public void receiveAttack(int damage) {
 		
 		life -= damage;
 		if (life == 0) {

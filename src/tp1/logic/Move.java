@@ -45,11 +45,7 @@ public enum Move {
 		Move move;
 		
 		param = param.toUpperCase();
-		
-		if (param.equals("UP") || param.equals("DOWN"))
-			move = null;
-		else 
-			move = valueOf(param.toUpperCase());
+		move = valueOf(param.toUpperCase());
 			
 		return move;
 	}

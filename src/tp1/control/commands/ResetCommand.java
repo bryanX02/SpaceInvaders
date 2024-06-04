@@ -3,6 +3,7 @@ package tp1.control.commands;
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
 import tp1.control.InitialConfiguration;
+import tp1.control.exceptions.InitializationException;
 import tp1.view.Messages;
 
 public class ResetCommand extends Command{
@@ -15,10 +16,14 @@ public class ResetCommand extends Command{
 	}
 
 	@Override
-	public ExecutionResult execute(GameModel game) {
-		game.reset(conf);
-		return new ExecutionResult(true);
-	}
+    public ExecutionResult execute(GameModel game) {
+        try {
+            game.reset(conf);
+            return new ExecutionResult(true);
+        } catch (InitializationException e) {
+            return new ExecutionResult(e.getMessage());
+        }
+    }
 
 	@Override
 	protected String getName() {

@@ -4,6 +4,12 @@ import java.util.Random;
 
 import tp1.control.GameModel;
 import tp1.control.InitialConfiguration;
+import tp1.control.exceptions.InitializationException;
+import tp1.control.exceptions.LaserInFlightException;
+import tp1.control.exceptions.NoShockWaveException;
+import tp1.control.exceptions.NotAllowedMoveException;
+import tp1.control.exceptions.NotEnoughPointsException;
+import tp1.control.exceptions.OffWorldException;
 import tp1.logic.gameobjects.Bomb;
 import tp1.logic.gameobjects.DestroyerAlien;
 import tp1.logic.gameobjects.EnemyWeapon;
@@ -69,57 +75,45 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	
 	// M�todos de GameModel
 	
-	// Funci�n que trate de realizar el movimiento de la nave, y devuelve si tuvo exito o no
 	@Override
-	public boolean move(Move motion) {
+    public void move(Move motion) throws OffWorldException, NotAllowedMoveException {
+        Position aux = new Position(player.getPos().getCol(), player.getPos().getRow());
+        aux = aux.move(motion);
 
-		// Variables
-		boolean result = false;
-		Position aux = new Position(player.getPos().getCol(), player.getPos().getRow());
-		aux = aux.move(motion);
-		// Si no se sale del borde puede moverse
-		if (aux.getCol() >= 0 && aux.getCol() <= 8) {
+        if (aux.getCol() < 0 || aux.getCol() > 8) {
+            throw new OffWorldException(String.format(Messages.OFF_WORLD_MESSAGE, motion.toString().toLowerCase(), player.getPos()));
+        }
 
-			player.move(motion);
-			result = true;
-			
-		}
-		
-		return result;
-		
-	}
+        if (!player.isAllowedMove(motion)) {
+            throw new NotAllowedMoveException(Messages.DIRECTION_ERROR + motion.toString() + "\nAllowed UCMShip moves: <" + UCMShip.allowedMoves("|") + ">");
+        }
+
+        player.move(motion);
+    }
 	
 	// Trata de disparar el laser
 	@Override
-	public boolean shootLaser() {
+	public void shootLaser() throws LaserInFlightException {
 		
-		boolean shot = false; 
-		
-		if (player.isCanShoot()) {
-			
-			player.shootLaser();
-			shot = true;
-		}
-		
-		return shot;
+		if (!player.isCanShoot()) {
+            throw new LaserInFlightException(Messages.LASER_ERROR);
+        }
+        player.shootLaser();
 		
 	}
 	
 	// Funci�n que trata de ejecutar el ShockWave
 	@Override
-	public boolean shockWave() {
+	public void shockWave() throws NoShockWaveException {
 		
 		// Variables
 		ShockWave sw = player.executeShockWave();
-		boolean executed = false;
-		
-		if (sw != null) {
-			executed = true;
-			container.checkAttacks(sw);
-			container.removeDead();
-			disableShockWave();
-		}
-		return executed;
+		if (sw == null) {
+            throw new NoShockWaveException(Messages.SHOCKWAVE_ERROR);
+        }
+        container.checkAttacks(sw);
+        container.removeDead();
+        disableShockWave();
 		
 	}
 	
@@ -149,9 +143,13 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	
 	// Metodo que resetea el juego
 	@Override
-	public void reset(InitialConfiguration conf) {
+	public void reset(InitialConfiguration conf) throws InitializationException {
 		
-		initGame(conf);
+		try {
+            initGame(conf);
+        } catch (Exception e) {
+            throw new InitializationException(Messages.INITIAL_CONFIGURATION_ERROR);
+        }
 		
 	}
 	
@@ -360,13 +358,11 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	}
 
 	@Override
-	public boolean shootSuperLaser() {
-		Boolean disparado = false;
-		if (player.getPoints() >= 5) {
-			player.shootSuperLaser();
-			disparado = true;
-		}
-		return disparado;
+	public void shootSuperLaser() throws NotEnoughPointsException {
+		if (player.getPoints() < 5) {
+            throw new NotEnoughPointsException(String.format(Messages.NOT_ENOUGH_POINTS_ERROR, player.getPoints(), 5));
+        }
+        player.shootSuperLaser();
 	}
 
 	@Override
