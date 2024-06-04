@@ -10,11 +10,15 @@ public class ShootCommand extends NoParamsCommand{
 		public ExecutionResult execute(GameModel game) {
 			
 			boolean result = game.shootLaser();
+			ExecutionResult exeResult;
 			
-;			if (result)
+			if (result) {
 				game.update();
+				exeResult = new ExecutionResult(result);
+			} else
+				exeResult = new ExecutionResult(Messages.LASER_ERROR);
 
-			return new ExecutionResult(result);
+			return exeResult;
 			
 		}
 

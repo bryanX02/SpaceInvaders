@@ -3,15 +3,19 @@ package tp1.logic;
 import java.util.Random;
 
 import tp1.control.GameModel;
+import tp1.control.InitialConfiguration;
 import tp1.logic.gameobjects.Bomb;
 import tp1.logic.gameobjects.DestroyerAlien;
 import tp1.logic.gameobjects.EnemyWeapon;
 import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.GameWorld;
 import tp1.logic.gameobjects.RegularAlien;
+import tp1.logic.gameobjects.ShipFactory;
 import tp1.logic.gameobjects.ShockWave;
+import tp1.logic.gameobjects.SuperLaser;
 import tp1.logic.gameobjects.UCMLaser;
 import tp1.logic.gameobjects.UCMShip;
+import tp1.logic.gameobjects.UCMWeapon;
 import tp1.logic.gameobjects.Ufo;
 import tp1.view.GameStatus;
 import tp1.view.Messages;
@@ -33,7 +37,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	private Level level;
 	private long seed;
 	private UCMShip player;
-	private UCMLaser laser;
 	private int currentCycle;
 	private AlienManager alienManager; 
 	private Ufo ufo;
@@ -44,31 +47,29 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	public Game(Level level, long seed) {
 		this.level = level;
 		this.seed = seed;
-		initGame();
+		initGame(InitialConfiguration.NONE);
 	}
 
 	// FALLA EL ATAQUE
 	
-	// Método que se encarga de inicializar los atributos de la clase.
+	// Mï¿½todo que se encarga de inicializar los atributos de la clase.
 	// Es decir, inicia el juego.
-	private void initGame() {
+	private void initGame(InitialConfiguration conf) {
 	
 		rand = new Random(seed);
 		doExit = false;
 		currentCycle = 0;
-		
-		laser = new UCMLaser(null, this, 0);
 		alienManager = new AlienManager(this, level);
-		container = alienManager.initialize();
+		container = alienManager.initialize(conf);
 		player = new UCMShip(this);
+		ufo = new Ufo(this, null, 0);
 		container.add(player);
-		ufo = new Ufo(this, false);
-		
+	
 	}
 	
-	// Métodos de GameModel
+	// Mï¿½todos de GameModel
 	
-	// Función que trate de realizar el movimiento de la nave, y devuelve si tuvo exito o no
+	// Funciï¿½n que trate de realizar el movimiento de la nave, y devuelve si tuvo exito o no
 	@Override
 	public boolean move(Move motion) {
 
@@ -94,7 +95,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 		boolean shot = false; 
 		
-		if (!laser.isAlive()) {
+		if (player.isCanShoot()) {
 			
 			player.shootLaser();
 			shot = true;
@@ -104,7 +105,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 	}
 	
-	// Función que trata de ejecutar el ShockWave
+	// Funciï¿½n que trata de ejecutar el ShockWave
 	@Override
 	public boolean shockWave() {
 		
@@ -113,53 +114,34 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		boolean executed = false;
 		
 		if (sw != null) {
-			executed = true;/*
-			daList.checkAttacks(sw);
-			raList.checkAttacks(sw);
-			bombList.recivesShockWave();*/
+			executed = true;
+			container.checkAttacks(sw);
+			container.removeDead();
 			disableShockWave();
 		}
 		return executed;
 		
 	}
 	
-	// Función que actualiza lo valores dej juego
+	// Funciï¿½n que actualiza lo valores dej juego
 	@Override
 	public void update() {
 		
-		// Siempre que se llame a esta función el juego aumentara de ciclo
+		// Siempre que se llame a esta funciï¿½n el juego aumentara de ciclo
 		currentCycle ++;
 		
-		// COMPUTER ACTIONS
-		/*daList.computerActions();
-		ufo.computerAction();
-		
-		// MOVIMIENTOS
-		// Se realizan los movimientos
-		raList.automaticMoves();
-		daList.automaticMoves();
-			
-		if (ufo.getPosition() != null)
-			ufo.automaticMove();
-		
-		if (bombList.size() > 0) {
-			bombList.automaticMoves();
-			bombList.checkAttacks(laser);
-		}
-		
-		if (laser.isAlive()) {
-			laser.automaticMove();
-			if (laser.getPos() != null)
-				performAttack(laser);
-		}
-		
-		// Los removeDeads se realizan en sus clases
-		daList.removeDead();
-		raList.removeDead();
-		bombList.removeDead();*/
 		container.automaticMoves();
 		container.computerActions();
 		container.removeDead();
+		
+		if (!ufo.isAlive()) {
+			ufo.onDelete();
+			ufo.computerAction();
+			if (ufo.isAlive())
+				container.add(ufo);
+		}
+			
+		
 		// Se comprueba si el jugador elimino a todos los aliens o el jugador murio
 		if (alienManager.allAlienDead() || !player.isAlive())
 			exit();
@@ -167,36 +149,36 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	
 	// Metodo que resetea el juego
 	@Override
-	public void reset() {
+	public void reset(InitialConfiguration conf) {
 		
-		initGame();
+		initGame(conf);
 		
 	}
 	
-	// Métodos de GameWorld
+	// Mï¿½todos de GameWorld
 
 
-	// Función con sobrecarga que añade un objeto al juego
+	// Funciï¿½n con sobrecarga que aï¿½ade un objeto al juego
 	@Override
-	public void addObject(UCMLaser laser) {
+	public void addObject(UCMWeapon laser) {
 		
-		// En este caso añade un nuevo laser
+		// En este caso aï¿½ade un nuevo laser
 		container.add(laser);
 		
 	}
 	
-	// Función con sobrecarga que añade un objeto al juego
+	// Funciï¿½n con sobrecarga que aï¿½ade un objeto al juego
 	@Override
 	public void addObject(Bomb bomb) {
 		
-		// En este caso añade un nuevo laser
+		// En este caso aï¿½ade un nuevo laser
 		container.add(bomb);
 		
 	}
 	
-	// Comprueba si el laser impactó con algún elemento del juego
+	// Comprueba si el laser impactï¿½ con algï¿½n elemento del juego
 	@Override
-	public void performAttack(UCMLaser laser) {
+	public void performAttack(UCMWeapon laser) {
 		
 		container.checkAttacks(laser);
 		/*if (ufo.getPosition() != null && laser.getPos() != null) {
@@ -209,56 +191,49 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	
 	}
 	
-	// Comprueba si el laser impactó con algún elemento del juego
+	// Comprueba una bomba impacto con la nave
 	@Override
 	public boolean performAttack(EnemyWeapon bomb) {
 		
 		boolean impact = false;
+		
 		if (bomb.getPos().equals(player.getPos())) {
 			player.recieveAttack(bomb.getDamage());
 			bomb.die();
 			bomb.onDelete();
 			impact = true;
-		} else if (laser.getPos() != null && bomb.getPos() != null) {
-			if (bomb.getPos().equals(laser.getPos()))
-			{
-				laser.die();
-				bomb.die();
-				bomb.onDelete();
-				impact = true;
-			}
 		}
 		
 		return impact;
 	
 	}
 	
-	// Método que aumenta los puntos del jugador
+	// Mï¿½todo que aumenta los puntos del jugador
 	@Override
 	public void recievePoints(int p) {
 		player.recievePoints(p);	
 	}
 	
-	// Método que elimina al jugador
+	// Mï¿½todo que elimina al jugador
 	@Override
 	public void playerDead() {		
 		player.die();
 	}
 
-	// Método que habilita del ShockWave 
+	// Mï¿½todo que habilita del ShockWave 
 	@Override
 	public void enableShockWave() {
 		player.enableShockWave();
 	}
 	
 
-	// Función que indica si el juego ha terminado
+	// Funciï¿½n que indica si el juego ha terminado
 	@Override
 	public boolean isFinished() {
 		return doExit;
 	}
 	
-	// Método que le indica al juego que debe acabar
+	// Mï¿½todo que le indica al juego que debe acabar
 	@Override
 	public void exit() {
 		doExit = true;	
@@ -270,23 +245,23 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	}
 	
 
-	// Función que devuelve el atributo rand del game
+	// Funciï¿½n que devuelve el atributo rand del game
 	@Override
 	public Random getRandom() {
 		return rand;
 	}
 	
 
-	// Función que devuelve el atributo level del game
+	// Funciï¿½n que devuelve el atributo level del game
 	@Override
 	public Level getLevel() {
 		return level;
 	}
 	
 	
-	// Métodos de GameStatus
+	// Mï¿½todos de GameStatus
 	
-	// Función que recibe los parametros de una casilla del tablero, y busca y devuelve el valor correspondiente
+	// Funciï¿½n que recibe los parametros de una casilla del tablero, y busca y devuelve el valor correspondiente
 	@Override
 	public String positionToString(int col, int row) {
 		
@@ -294,26 +269,6 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		String element = " ";
 		Position box = new Position(col, row);
 		GameObject obj;
-		
-		/*
-		// Busqueda de los aliens comunes
-		element = raList.toString(box);
-		
-		// Busqueda de los aliens destructores
-		if (element == " ")
-			element = daList.toString(box);
-		
-		// Busqueda del jugador
-		if (player.getPos().equals(box) && element == " ") 
-			if (player.isAlive())
-				element = Messages.UCMSHIP_SYMBOL;
-			else
-				element = Messages.UCMSHIP_DEAD_SYMBOL;
-		
-		// Busqueda de la bombas
-		if (bombList.size() > 0 && element == " ")
-			element = bombList.toString(box);
-		*/	
 		
 		
 	
@@ -323,13 +278,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 			element = obj.toString();
 		}
 	
-		// Busqueda del ufo
-		/*if (ufo.getPosition() != null) {
-			if (ufo.isOnPosition(box))
-				
-				element = Messages.UFO_SYMBOL + "[" + String.format("%02d", ufo.getLife()) + "]";;
-		}*/
-		// Si no hubiese coincidido con ninguna posición de los elementos del juego devolvería " "
+		// Si no hubiese coincidido con ninguna posiciï¿½n de los elementos del juego devolverï¿½a " "
 		return element;
 	}
 
@@ -341,16 +290,17 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 		StringBuilder str = new StringBuilder();
 		
-		str.append(String.format(Messages.UCM_DESCRIPTION, Messages.UCMSHIP_DESCRIPTION, UCMShip.DAMAGE, UCMShip.ARMOR)).append(NEW_LINE);
 		str.append(String.format(Messages.ALIEN_DESCRIPTION, Messages.REGULAR_ALIEN_DESCRIPTION, RegularAlien.POINTS, 0, RegularAlien.ARMOR)).append(NEW_LINE);
 		str.append(String.format(Messages.ALIEN_DESCRIPTION, Messages.DESTROYER_ALIEN_DESCRIPTION, DestroyerAlien.POINTS, 1, DestroyerAlien.ARMOR)).append(NEW_LINE);
+		str.append(String.format(Messages.ALIEN_DESCRIPTION, Messages.EXPLOSIVE_ALIEN_DESCRIPTION, 12, 1, 2)).append(NEW_LINE);
+		str.append(String.format(Messages.UCM_DESCRIPTION, Messages.UCMSHIP_DESCRIPTION, UCMShip.DAMAGE, UCMShip.ARMOR)).append(NEW_LINE);
 		str.append(String.format(Messages.ALIEN_DESCRIPTION, Messages.UFO_DESCRIPTION, Ufo.POINTS, 0, Ufo.ARMOR));
-		
+			
 		return str.toString();
 		
 	}
 	
-	// Función que devuelve los datos del juego formateados en un String
+	// Funciï¿½n que devuelve los datos del juego formateados en un String
 	@Override
 	public String stateToString() {
 		
@@ -371,7 +321,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 	}
 	
-	// Función que devuelve un booleano en función de si los aliens han ganado
+	// Funciï¿½n que devuelve un booleano en funciï¿½n de si los aliens han ganado
 	@Override
 	public boolean aliensWin() {
 		
@@ -379,7 +329,7 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 	}
 
-	// Función que devuelve un booleano en función de si el jugador ha ganado
+	// Funciï¿½n que devuelve un booleano en funciï¿½n de si el jugador ha ganado
 	@Override
 	public boolean playerWin() {
 		
@@ -387,13 +337,13 @@ public class Game implements GameModel, GameStatus, GameWorld {
 		
 	}
 	
-	// Función que devuelve el ciclo actual
+	// Funciï¿½n que devuelve el ciclo actual
 	@Override
 	public int getCycle() {
 		return currentCycle;
 	}
 
-	// Funnción que busca y devuelve el número de aliens presentes
+	// Funnciï¿½n que busca y devuelve el nï¿½mero de aliens presentes
 	@Override
 	public int getRemainingAliens() {
 		//TODO fill your code
@@ -401,12 +351,70 @@ public class Game implements GameModel, GameStatus, GameWorld {
 	}
 
 
-	// Otros métodos
+	// Otros mï¿½todos
 
 	
-	// Método que deshabilita del ShockWave 
+	// Mï¿½todo que deshabilita del ShockWave 
 	private void disableShockWave() {		
 		player.disableShockWave();	
 	}
+
+	@Override
+	public boolean shootSuperLaser() {
+		Boolean disparado = false;
+		if (player.getPoints() >= 5) {
+			player.shootSuperLaser();
+			disparado = true;
+		}
+		return disparado;
+	}
+
+	@Override
+	public void explotar(Position pos) {
+		
+		String element = " ";
+		Position box;
+		GameObject obj;
+		
+		// Primero la fila (recorremos columnas)
+		for (int i = 0; i < DIM_X; i++) {
+			if (i != pos.getCol()) {
+				box = new Position(pos.getRow(), i);
+				obj = container.getObjFromPos(box);
+				obj.receiveAttack(1);
+			}
+		}
+	
+		// Recorremos las filas de la misma columna
+	    for (int j = 0; j < DIM_Y; j++) {
+	        if (j != pos.getRow()) {
+	            box = new Position(j, pos.getCol());
+	            obj = container.getObjFromPos(box);
+	            if (obj != null) {
+	                obj.receiveAttack(1);
+	            }
+	        }
+	    }
+	    
+	    // Recorremos las diagonales
+	    int[][] deltas = {
+	        {-1, -1}, {-1, 1}, {1, -1}, {1, 1}
+	    };
+	    
+	    for (int[] delta : deltas) {
+	        int newRow = pos.getRow() + delta[0];
+	        int newCol = pos.getCol() + delta[1];
+	        
+	        if (newRow >= 0 && newRow < DIM_Y && newCol >= 0 && newCol < DIM_X) {
+	            box = new Position(newRow, newCol);
+	            obj = container.getObjFromPos(box);
+	            if (obj != null) {
+	                obj.receiveAttack(1);
+	            }
+	        }
+	    }
+		
+	}
+
 	
 }

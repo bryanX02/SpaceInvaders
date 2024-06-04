@@ -20,11 +20,15 @@ public class DestroyerAlien extends AlienShip{
 		private AlienManager alienManager;
 		private boolean canShootBomb;
 
+		public DestroyerAlien() {
+			super(null, null, 0);
+		}
+
 		// Constructor
-		public DestroyerAlien(Position pos, GameWorld game, int speed, Move dir, AlienManager alienManager) {
+		public DestroyerAlien(Position pos, GameWorld game, AlienManager alienManager) {
 			super(game, pos, ARMOR);
-			this.speed = speed;
-			this.dir = dir;
+			this.speed = game.getLevel().getNumCyclesToMoveOneCell();
+			this.dir = Move.LEFT;
 			this.alienManager = alienManager;
 			cyclesToMove = speed;
 			canShootBomb = true;
@@ -41,7 +45,7 @@ public class DestroyerAlien extends AlienShip{
 		@Override
 		public int getDamage() {
 			// TODO Auto-generated method stub
-			return 2;
+			return 1;
 		}
 
 		@Override
@@ -151,7 +155,7 @@ public class DestroyerAlien extends AlienShip{
 
 		@Override
 		public String toString() {
-			return getSymbol() + "[" + String.format("%02d", life) + "]";
+			return " " + getSymbol() + "[" + String.format("%02d", life) + "]";
 		}
 
 		// M�todo que habilita el disparo de la bomba
@@ -163,6 +167,11 @@ public class DestroyerAlien extends AlienShip{
 
 		public boolean isAlive() {
 			return life > 0;
+		}
+
+		@Override
+		protected AlienShip copy(GameWorld game, Position pos, AlienManager am) {
+			return new DestroyerAlien(pos, game, am);
 		}	
 		
 	}

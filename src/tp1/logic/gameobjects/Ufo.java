@@ -3,25 +3,21 @@ package tp1.logic.gameobjects;
 import tp1.logic.Game;
 import tp1.logic.Move;
 import tp1.logic.Position;
+import tp1.view.Messages;
 
 // Clase con la que se crearan y manejaran los UFO's
-public class Ufo {
+public class Ufo extends EnemyShip{
 
 	public static final int POINTS = 25;
 	public static final int ARMOR = 1;
 	
 	// Atributos
-	private Position pos;
 	private boolean enabled;
-	private Game game;
-	private int life;
 	
-	// Constructor
-	public Ufo(Game game, boolean enabled) {
-
-		this.enabled = enabled;
-		this.game = game;
-		life = ARMOR;
+	
+	public Ufo(GameWorld game, Position pos, int life) {
+		super(game, pos, life);
+		enabled = false;
 	}
 
 	public void computerAction() {
@@ -32,18 +28,15 @@ public class Ufo {
 	
 	private void enable() {
 		enabled = true;
-		pos = new Position(9, 0);
+		life = ARMOR;
+		pos = new Position(8, 0);
 	}
 
 	public void onDelete() {
 		
-		game.enableShockWave();
-		
+		enabled = false;
 	}
 	
-	public boolean isAlive() {
-		return life > 0;
-	}
 	
 	public void automaticMove() {
 		performMovement();
@@ -52,17 +45,12 @@ public class Ufo {
 	public void performMovement() {
 		
 		pos = pos.move(Move.LEFT);
-		if (isOut()) {
-			pos = null;
-			enabled = false;
-		}
 		
 	}
 
 	public void die() {
-		
-		pos = null;
-		
+
+		life = 0;
 	}
 
 	public boolean isOut () {
@@ -74,7 +62,10 @@ public class Ufo {
 	 * @return <code>true</code> if an ufo should be generated.
 	 */
 	private boolean canGenerateRandomUfo(){
-		return game.getRandom().nextDouble() < game.getLevel().getUfoFrequency();
+
+        double randomValue = game.getRandom().nextDouble();
+        double frequency = game.getLevel().getUfoFrequency();
+		return randomValue < frequency;
 	}
 
 	public boolean isOnPosition(Position box) {
@@ -96,13 +87,20 @@ public class Ufo {
 		
 		life -= damage;
 		if (life == 0) {
+
+			game.enableShockWave();
 			die();
 		}
 	}
 
-	public Position getPosition() {
-		// TODO Auto-generated method stub
-		return pos;
+	@Override
+	public String toString() {
+		return " " + Messages.UFO_SYMBOL + "[" + String.format("%02d", life) + "]";
 	}
+
+	
+	
+	
+
 	
 }

@@ -8,7 +8,15 @@ public class ShockWaveCommand extends NoParamsCommand{
 		  		
 		@Override
 		public ExecutionResult execute(GameModel game) {
-			return new ExecutionResult(game.shockWave());
+			Boolean disparado = game.shockWave();
+			ExecutionResult exe;
+			
+			if (!disparado)
+				exe = new ExecutionResult(Messages.SHOCKWAVE_ERROR);
+			else
+				exe = new ExecutionResult(disparado);
+			
+			return exe;
 		}
 
 		@Override

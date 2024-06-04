@@ -62,7 +62,7 @@ public class UCMLaser extends UCMWeapon{
 		game.performAttack(this);
 	}
 
-	// Método que ejecuta el movimiento del laser
+	// Mï¿½todo que ejecuta el movimiento del laser
 	private void performMovement(Move dir) {
 		
 		pos = pos.move(dir);
@@ -86,12 +86,6 @@ public class UCMLaser extends UCMWeapon{
 	 */
 	private boolean weaponAttack(RegularAlien other) {
 		return false;	
-	}
-
-	// Función booleana respecto a la vida del laser
-	@Override
-	public boolean isAlive() {
-		return life > 0;
 	}
 
 

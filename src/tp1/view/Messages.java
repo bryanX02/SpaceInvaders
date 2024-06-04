@@ -2,6 +2,7 @@ package tp1.view;
 
 import tp1.control.InitialConfiguration;
 import tp1.logic.Level;
+import tp1.logic.gameobjects.UCMShip;
 
 /**
  * String literals used in the game.
@@ -9,7 +10,7 @@ import tp1.logic.Level;
  */
 public class Messages {
 
-	public static final String VERSION = "2.0";
+	public static final String VERSION = "3.0";
 
 	public static final String GAME_NAME = "Space Invaders";
 
@@ -30,6 +31,8 @@ public class Messages {
 	public static final String SEED_NOT_A_NUMBER_ERROR = String.format("%s: %%s", SEED_NOT_A_NUMBER);
 
 	public static final String CONFIGURED_LEVEL = "Level: %s";
+
+	public static final String ALLOWED_UCMSHIP_MOVES = "<%s>".formatted(UCMShip.allowedMoves("|"));
 
 	public static final String CONFIGURED_SEED = "Random generator initialized with seed: %d";
 
@@ -69,13 +72,15 @@ public class Messages {
 
 	public static final String PLAYER_WINS = "Player wins!";
 
-	public static final String AVAILABLE_SHIPS = "Available ships:";
+	public static final String AVAILABLE_SHIPS = "Available ships: ";
 
-	public static final String UNEXPECTED_RUNTIME_ERROR = "Oops!";
+	public static final String UNEXPECTED_RUNTIME_ERROR = "Oops! This should not have happened...";
 	
 	public static final String SCORE = "Points:";
 
 	public static final String LASER_ERROR = "Laser cannot be shot";
+
+	public static final String LASER_ALREADY_SHOT = "There is already a laser in the board";
 
 	public static final String SUPERLASER_ERROR = "Super laser cannot be shot";
 
@@ -84,6 +89,8 @@ public class Messages {
 	public static final String MOVEMENT_ERROR = "Movement cannot be performed";
 	
 	public static final String DIRECTION_ERROR = "Wrong direction: ";
+
+	public static final String NOT_ENOUGH_POINTS_ERROR = "Not enough points: only %s points, %s points required";
 
 	//
 	// Game Objects
@@ -100,11 +107,11 @@ public class Messages {
 
 	public static final String LASER_SYMBOL = "oo";
 
-	public static final String SUPERLASER_SYMBOL = "Ç�Ç�";
+	public static final String SUPERLASER_SYMBOL = "ǁǁ";
 
 	public static final String UCMSHIP_SYMBOL = "^__^";
 
-	public static final String UCMSHIP_DEAD_SYMBOL = "#â”€â”€#";
+	public static final String UCMSHIP_DEAD_SYMBOL = "#──#";
 
 	public static final String UCMSHIP_DESCRIPTION = "[U]CM Ship";
 
@@ -143,12 +150,12 @@ public class Messages {
 	
 	public static final String COMMAND_MOVE_NAME = "move";
 	public static final String COMMAND_MOVE_SHORTCUT = "m";
-	public static final String COMMAND_MOVE_DETAILS = "[m]ove <left|lleft|right|rright>";
+	public static final String COMMAND_MOVE_DETAILS = "[m]ove " + ALLOWED_UCMSHIP_MOVES;
 	public static final String COMMAND_MOVE_HELP = "moves the UCMShip in the indicated direction";
 	
 	public static final String COMMAND_RESET_NAME = "reset";
 	public static final String COMMAND_RESET_SHORTCUT = "r";
-	public static final String COMMAND_RESET_DETAILS = "[r]eset [<%s>]".formatted(InitialConfiguration.all("|"));
+	public static final String COMMAND_RESET_DETAILS = "[r]eset [<" + InitialConfiguration.all("|") + ">]";
 	public static final String COMMAND_RESET_HELP = "resets the game";
 
 	public static final String COMMAND_SHOCKWAVE_NAME = "shockwave";
@@ -170,6 +177,18 @@ public class Messages {
 	public static final String COMMAND_SUPERLASER_SHORTCUT = "sl";
 	public static final String COMMAND_SUPERLASER_DETAILS = "[s]uper[L]aser";
 	public static final String COMMAND_SUPERLASER_HELP = "shoots a super laser when player has enough points";
+
+	public static final String UNKNOWN_SHIP = "Unknown ship: \"%s\"";
+	public static final String FILE_NOT_FOUND = "File not found: \"%s\"";
+	public static final String READ_ERROR = "Undetermined error reading file \"%s\"";
+	public static final String INCORRECT_ENTRY = "Incorrect entry \"%s\". Insufficient parameters.";
+
+	public static final String OFF_WORLD_MESSAGE = "Cannot move in direction %s from position %s";
+	public static final String OFF_WORLD_POSITION = "Position %s is off board";
+
+	public static final String ALLOWED_MOVES_MESSAGE = "Allowed UCMShip moves: " + ALLOWED_UCMSHIP_MOVES;
+	
+	public static final String POSITION = "(%s, %s)";
 
 	/**
 	 * Formats an error message.
@@ -204,17 +223,5 @@ public class Messages {
 	public static final String ucmShipDescription(String ucmShipDescription, int damage, int endurance) {
 		return Messages.UCM_DESCRIPTION.formatted(ucmShipDescription, damage, endurance);
 	}
-/* @formatter:off */
-	public static final String[] HELP_LINES = new String[] { "Available commands:",
-			"[m]ove <left|lleft|right|rright>: moves the UCMShip to the indicated direction",
-			"[s]hoot: player shoots a laser",
-			"shock[W]ave: player releases a shock wave",
-			"[l]ist: print the list of current ships",
-			"[r]eset: start a new game",
-			"[h]elp: print this help message",
-			"[e]xit: end the execution of the game",
-			"[n]one | \"\": skips cycle"};
-	/* @formatter:on */
+
 }
-
-

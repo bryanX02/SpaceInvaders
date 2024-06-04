@@ -1,6 +1,7 @@
 package tp1.logic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -8,6 +9,7 @@ import javax.print.attribute.standard.Sides;
 
 import tp1.logic.gameobjects.DestroyerAlien;
 import tp1.logic.gameobjects.EnemyWeapon;
+import tp1.logic.gameobjects.GameItem;
 import tp1.logic.gameobjects.GameObject;
 import tp1.logic.gameobjects.ShockWave;
 import tp1.logic.gameobjects.UCMWeapon;
@@ -36,7 +38,6 @@ public class GameObjectContainer {
 			obj.automaticMove();
 			if (obj.getPos().isOut()) {
 				obj.die();
-				obj.onDelete();
 				deadObjects++;
 			}
 		});
@@ -79,9 +80,10 @@ public class GameObjectContainer {
 		
 		if (weapon.isAlive()) {	
 			
-			objects.forEach(obj -> {
-				
-				if (weapon.performAttack(obj)) {
+
+			Collections.reverse(objects);
+			for (GameObject obj: objects) {
+				if (weapon.isAlive() && weapon.performAttack(obj)) {
 					
 					weapon.die();
 					weapon.onDelete();
@@ -94,7 +96,9 @@ public class GameObjectContainer {
 					}
 				}
 				
-			});
+			}
+
+			Collections.reverse(objects);
 			
 		}
 		
@@ -121,10 +125,12 @@ public class GameObjectContainer {
 				}
 				
 			});
+
 			
 		}
 		
 	}  
+
 	
 	// M�todo que elimina el alien que este muerto (su vida = 0)
 	public void removeDead() {
@@ -135,6 +141,7 @@ public class GameObjectContainer {
 				if (!objects.get(i).isAlive()) {
 					remove(objects.get(i));
 					deadObjects--;
+					i--;
 				}
 			}
 

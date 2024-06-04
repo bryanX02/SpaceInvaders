@@ -14,7 +14,7 @@ public class Bomb extends EnemyWeapon{
 
 	// Constructor
 	public Bomb(DestroyerAlien owner, GameWorld game) {
-		super(game, new Position(owner.getPos().getCol(), owner.getPos().getRow()), ARMOUR);
+		super(game, new Position(owner.getPos().getCol(), owner.getPos().getRow()+1), ARMOUR);
 		this.owner = owner;
 	}
 
@@ -28,20 +28,20 @@ public class Bomb extends EnemyWeapon{
 		return ARMOUR;
 	}
 
-	// Función que devuelve el daño que provoca la bomba
+	// Funciï¿½n que devuelve el daï¿½o que provoca la bomba
 	@Override
 	public int getDamage() {
 		return DAMAGE;
 	}
 	
 	
-	// Método que habilita la bomba en su nave dueña
+	// Mï¿½todo que habilita la bomba en su nave dueï¿½a
 	@Override
 	public void onDelete() {
 		owner.enableBomb();
 	}
 
-	// Función booleana respecto a si esta fuera del tablero
+	// Funciï¿½n booleana respecto a si esta fuera del tablero
 	public boolean isOut() {
 		return pos.getRow() == 8;
 	}

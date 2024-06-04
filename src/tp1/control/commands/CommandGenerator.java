@@ -3,40 +3,48 @@ package tp1.control.commands;
 import java.util.Arrays;
 import java.util.List;
 
+import tp1.control.InitialConfiguration;
+import tp1.control.exceptions.CommandParseException;
+import tp1.view.Messages;
+
 public class CommandGenerator {
 
 	private static final List<Command> AVAILABLE_COMMANDS = Arrays.asList(
 		new HelpCommand(),
 		new MoveCommand(),
-		new ExitCommand(),
 		new UpdateCommand(),
-		new ListCommand(),
-		new ResetCommand(),
 		new ShootCommand(),
-		new ShockWaveCommand()
+		new ShockWaveCommand(),
+		new ListCommand(),
+		new ExitCommand(),
+		new ResetCommand(InitialConfiguration.NONE),
+		new SuperLaserCommand()
 	);
 
-	public static Command parse(String[] commandWords) {	
+	public static Command parse(String[] commandWords) throws CommandParseException {	
 		
 		Command command = null;
 		int i = 0;
-		
-		while (i < AVAILABLE_COMMANDS.size() && command == null) {
-			
-			// Primero se instancia al comando que comprobaremos
-			command = AVAILABLE_COMMANDS.get(i++);
-			
-			// Y ahora se emplea su parse para avergiar si realmente corresponde al de los paremetros
-			// A su vez, este comando estará instanciado correctamente o volverá a ser null si no era el comando buscado
-			command = command.parse(commandWords);
-			
-		}
-		
+
 		// Para tener en cuenta el none cuando no escriben nada
-		if (command == null) {
-			if (commandWords[0] == "")
-				command = AVAILABLE_COMMANDS.get(3);
+		if (commandWords[0] == "")
+			command = AVAILABLE_COMMANDS.get(2);
+		else {
+			
+			while (i < AVAILABLE_COMMANDS.size() && command == null) {
+				
+				// Primero se instancia al comando que comprobaremos
+				command = AVAILABLE_COMMANDS.get(i++);
+				
+				// Y ahora se emplea su parse para avergiar si realmente corresponde al de los paremetros
+				// A su vez, este comando estará instanciado correctamente o volverá a ser null si no era el comando buscado
+				command = command.parse(commandWords);
+			}
+		
 		}
+		if (command == null) {
+            throw new CommandParseException(Messages.UNKNOWN_COMMAND);
+        }
 		
 		return command;
 	}

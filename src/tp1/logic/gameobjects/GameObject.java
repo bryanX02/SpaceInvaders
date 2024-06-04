@@ -39,7 +39,7 @@ public abstract class GameObject implements GameItem {
 	}
 
 	
-	// Funciones y métodos que se heredaran o no
+	// Funciones y mï¿½todos que se heredaran o no
 	protected abstract String getSymbol();
 	protected abstract int getDamage();
 	protected abstract int getArmour();
@@ -59,9 +59,12 @@ public abstract class GameObject implements GameItem {
 		boolean impact = false;
 		
 		if (other != this) {
-			// Comprobación de posiones
+			// Comprobaciï¿½n de posiones
 			if (pos != null) {
-				if (other.isOnPosition(pos))
+				// La segunda condicion es para cuando los laseres atraviesan las bombas o naves
+				if (other.isOnPosition(pos) || 
+						((other.getClass().equals(Bomb.class) || other.getClass().equals(RegularAlien.class)  || other.getClass().equals(DestroyerAlien.class))
+								&& other.isOnPosition(new Position(pos.getCol(), pos.getRow()+1))))
 					impact = true;
 			}
 			
@@ -87,7 +90,18 @@ public abstract class GameObject implements GameItem {
 		
 	}
 	
-	// Método que le resta el daño a la vida del objeto
+	public void receiveAttack(int damage) {
+		
+		receiveDamage(damage);
+		if (!isAlive()) {
+			die();
+			onDelete();
+		}
+		
+		
+	}
+	
+	// Mï¿½todo que le resta el daï¿½o a la vida del objeto
 	private void receiveDamage(int damage) {
 		life -= damage;
 	}

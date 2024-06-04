@@ -24,17 +24,23 @@ public class RegularAlien extends AlienShip{
 	private AlienManager alienManager;
 
 	
+	
+	public RegularAlien() {
+		super(null, null, 0);
+	}
+
+
 	// Contructor
-	public RegularAlien(Position pos, Game game, int speed, Move dir, AlienManager alienManager) {
+	public RegularAlien(Position pos, GameWorld game, AlienManager alienManager) {
 		super(game, pos, ARMOR);
-		this.speed = speed;
-		this.dir = dir;
+		this.speed = game.getLevel().getNumCyclesToMoveOneCell();
+		this.dir = Move.LEFT;
 		this.alienManager = alienManager;
 		cyclesToMove = speed;
 	}
 	
 
-	// Función que devuelve los puntos que otorga la eliminación del alien
+	// Funciï¿½n que devuelve los puntos que otorga la eliminaciï¿½n del alien
 	@Override
 	public int getPoints() {
 		return POINTS;
@@ -103,14 +109,14 @@ public class RegularAlien extends AlienShip{
 		
 	}
 
-	// Método que desciende un alien y cambia su dirección
+	// Mï¿½todo que desciende un alien y cambia su direcciï¿½n
 	private void descent() {
 		
 		performMovement(Move.DOWN);
 		dir = dir.flip();
 	}
 
-	// Método que realiza el movimiento pasado por parametro
+	// Mï¿½todo que realiza el movimiento pasado por parametro
 	private void performMovement(Move dir) {
 		
 		pos = pos.move(dir);
@@ -122,32 +128,13 @@ public class RegularAlien extends AlienShip{
 		
 	}
 
-	// Método sobrecargado que recibe el ataque de un laser
-	@Override
-	public boolean receiveAttack(UCMWeapon weapon) {	
-		receiveDamage(UCMLaser.DAMAGE);
-		return false;
-	}
-
-
-	// Metodo que recibe daño
-	private void receiveDamage(int damage) {
-		
-		life -= damage;
-		
-		// Si llegó a 0 el alien muere
-		if (life == 0) {
-			die();
-		}
-	}
-
-	// Método que avisa al manager de que el alien murio
+	// Mï¿½todo que avisa al manager de que el alien murio
 	@Override
 	public void die() {
 		alienManager.regularAlienDead();
 	}
 	
-	// Función boolena respecto a si el alien esta en la última fila
+	// Funciï¿½n boolena respecto a si el alien esta en la ï¿½ltima fila
 	private boolean isInFinalRow() {
 		
 		return pos.getRow() == 7;
@@ -156,7 +143,13 @@ public class RegularAlien extends AlienShip{
 
 	@Override
 	public String toString() {
-		return getSymbol() + "[" + String.format("%02d", life) + "]";
+		return " " + getSymbol() + "[" + String.format("%02d", life) + "]";
+	}
+
+
+	@Override
+	protected AlienShip copy(GameWorld game, Position pos, AlienManager am) {
+		return new RegularAlien(pos, game, am);
 	}
 
 	

@@ -11,9 +11,10 @@ public interface GameModel {
 	public boolean shockWave();
 	public boolean isFinished();
 	public void update();
-	public void reset();
+	public void reset(InitialConfiguration conf);
 	public void exit();
 	public Random getRandom();
 	public String infoToString();
+	public boolean shootSuperLaser();
 	
 }

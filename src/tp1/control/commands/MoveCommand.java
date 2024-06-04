@@ -66,12 +66,11 @@ public class MoveCommand extends Command {
 	@Override
 	public Command parse(String[] commandWords) {
 		
-		Command comando;
+		Command comando = null;
 		
 		if (commandWords.length != 2) {
 			paramError = true;
-			comando = null;
-		} else {
+		} else if (this.matchCommandName(commandWords[0])){
 			paramError = false;
 			directionError = null;
 			// Se emplea un try catch para tener en cuenta un error del valueOf

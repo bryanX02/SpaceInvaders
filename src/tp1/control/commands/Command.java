@@ -2,6 +2,8 @@ package tp1.control.commands;
 
 import tp1.control.ExecutionResult;
 import tp1.control.GameModel;
+import tp1.control.exceptions.CommandExecuteException;
+import tp1.control.exceptions.CommandParseException;
 import tp1.logic.Game;
 import tp1.view.GameStatus;
 
@@ -23,8 +25,8 @@ public abstract class Command {
 		 * 
 		 * @return {@code ExecutionResult} representing if command was successful and if board must be printed
 		 */
-	  public abstract ExecutionResult execute(GameModel game);	  
-	  public abstract Command parse(String[] commandWords);
+	  public abstract ExecutionResult execute(GameModel game) throws CommandExecuteException;	  
+	  public abstract Command parse(String[] commandWords) throws CommandParseException;
 	  
 	  protected boolean matchCommandName(String name) {
 		    return getShortcut().equalsIgnoreCase(name) || 

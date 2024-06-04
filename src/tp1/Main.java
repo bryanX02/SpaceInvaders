@@ -49,7 +49,7 @@ public class Main {
 					System.out.println(Messages.WELCOME);
 		
 					System.out.println(String.format(Messages.CONFIGURED_LEVEL, level.name()));
-					System.out.print(String.format(Messages.CONFIGURED_SEED, seed));
+					System.out.println(String.format(Messages.CONFIGURED_SEED, seed));
 		
 					Game game = new Game(level, seed);
 					Scanner scanner = new Scanner(System.in);

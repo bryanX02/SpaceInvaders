@@ -1,6 +1,7 @@
 package tp1.logic.gameobjects;
 
 import tp1.control.GameModel;
+import tp1.control.InitialConfiguration;
 import tp1.logic.Move;
 import tp1.logic.Position;
 import tp1.view.Messages;
@@ -16,12 +17,14 @@ public class UCMShip extends Ship{
 	private boolean hasShockWave;
 	private boolean canShoot;
 	private ShockWave sw;
+	private String simbActual;
 	
 	// Constructor
 	public UCMShip(GameWorld game) {
 		
 		super(game, new Position(4, 7), ARMOR);
 		canShoot = true;
+		simbActual = Messages.UCMSHIP_SYMBOL;
 	}
 
 	// Getters
@@ -41,7 +44,7 @@ public class UCMShip extends Ship{
 		return points;
 	}
 	
-	// Método que ejucuta el movimiento pasado por parametro
+	// Mï¿½todo que ejucuta el movimiento pasado por parametro
 	public void move(Move motion) {
 		
 		pos = pos.move(motion);
@@ -59,7 +62,7 @@ public class UCMShip extends Ship{
 		if (canShoot) {
 			
 			game.addObject(new UCMLaser (posLaser, game, 1));
-			
+			canShoot = false;
 		}
 		
 	}
@@ -82,19 +85,23 @@ public class UCMShip extends Ship{
 		
 	}
 	
+	
+	@Override
+	public void onDelete() {
+		simbActual = Messages.UCMSHIP_DEAD_SYMBOL;
+	}
+
 	public void recieveAttack(int damage2) {
 		
 		recieveDamage(damage2);
-		
+		if (!isAlive())
+			onDelete();
 		
 	}
 	
 	private void recieveDamage(int d) {
 		
 		life -= d;
-		if (life == 0) {
-			die();
-		}
 		
 	}
 	
@@ -119,12 +126,34 @@ public class UCMShip extends Ship{
 
 	@Override
 	public String toString() {
-		return Messages.UCMSHIP_SYMBOL;
+		return simbActual;
 	}
 
 	public boolean hasShockWave() {
 		return hasShockWave;
 	}
+
+	public boolean isCanShoot() {
+		return canShoot;
+	}
+
+	public static Object allowedMoves(String string) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(Move.LEFT.toString().toLowerCase() + string);
+		sb.append(Move.LLEFT.toString().toLowerCase() + string);
+		sb.append(Move.RIGHT.toString().toLowerCase() + string);
+		sb.append(Move.RRIGHT.toString().toLowerCase() + string);
+		String allLevels = sb.toString();
+		return allLevels.substring(0, allLevels.length()-string.length());
+	}
+
+	public void shootSuperLaser() {
+		points -= 5;
+		game.addObject(new SuperLaser(pos, game, ARMOR));
+		
+	}
+	
+
 	
 	
 	

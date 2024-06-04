@@ -18,11 +18,10 @@ public class EnemyWeapon extends Weapon{
 			
 		// Se ejecuta su movimiento que siempre es el mismo
 		performMovement(dir);
-		game.performAttack(this);
 	
 	}
 
-	// Método que ejecuta el movimiento
+	// Mï¿½todo que ejecuta el movimiento
 	private void performMovement(Move dir) {	
 		
 		pos = pos.move(dir);

@@ -1,8 +1,10 @@
 package tp1.logic;
 
+import tp1.control.InitialConfiguration;
 import tp1.logic.gameobjects.DestroyerAlien;
 //import tp1.logic.gameobjects.DestroyerAlien;
 import tp1.logic.gameobjects.RegularAlien;
+import tp1.logic.gameobjects.ShipFactory;
 import tp1.logic.lists.DestroyerAlienList;
 //import tp1.logic.lists.DestroyerAlienList;
 import tp1.logic.lists.RegularAlienList;
@@ -29,9 +31,6 @@ public class AlienManager {
 	public AlienManager(Game game, Level level) {
 		this.level = level;
 		this.game = game;
-		remainingRAliens = level.getNumRegularAliens();
-		remainingDAliens = level.getNumDestroyerAliens();
-		remainingAliens = remainingRAliens + remainingDAliens;
 		onBorder = false;
 	}
 		
@@ -49,10 +48,10 @@ public class AlienManager {
 		int row = 1;
 		int col = 2;
 		
-		// Instanciación de la lista 
+		// Instanciaciï¿½n de la lista 
 		raList = new RegularAlienList(level.getNumRegularAliens());
 		
-		// Se añaden los aliens a la lista con sus correspondientes posiciones
+		// Se aï¿½aden los aliens a la lista con sus correspondientes posiciones
 		for (int i = 0; i < level.getNumRegularAliens(); i++) {
 			
 			// Valores para la segunda fila de regular aliens
@@ -60,7 +59,7 @@ public class AlienManager {
 				row = 2;
 				col = 2;
 			}
-			ra = new RegularAlien(new Position(col, row), game, level.getNumCyclesToMoveOneCell(), Move.LEFT, this);
+			ra = new RegularAlien(new Position(col, row), game, this);
 			raList.add(ra, i);
 			col ++;
 		}
@@ -79,19 +78,19 @@ public class AlienManager {
 		int row = 2;
 		int col = 0;
 		
-		// Instanciación de la lista 
+		// Instanciaciï¿½n de la lista 
 		raList = new DestroyerAlienList(level.getNumDestroyerAliens());
 		
 		// Si el nivel no es el EASY la fila de naves destructoras sera la 3
 		if (!level.equals(Level.EASY))
 			row = 3;
 		
-		// Creamos, posicionamos y añadimos las naves a la lista
+		// Creamos, posicionamos y aï¿½adimos las naves a la lista
 		for (int i = 0; i < level.getNumDestroyerAliens(); i++) {
 			col = i + 3;
 			if (level.equals(Level.INSANE))
 				col --;
-			ra = new DestroyerAlien(new Position(col, row), game, level.getNumCyclesToMoveOneCell(), Move.LEFT, this);
+			ra = new DestroyerAlien(new Position(col, row), game, this);
 			raList.add(ra, i);
 		}
 		
@@ -102,12 +101,12 @@ public class AlienManager {
 	// CONTROL METHODS
 	
 	
-	// Método que decrementa el numero de naves a descender al ser llamado desde la lista
+	// Mï¿½todo que decrementa el numero de naves a descender al ser llamado desde la lista
 	public void readyToDescend() {
 		shipsOnBorder --;
 	}
 	
-	// Método que marca las naves al llegar al borde
+	// Mï¿½todo que marca las naves al llegar al borde
 	public void shipOnBorder() {
 		
 		if(!onBorder) {
@@ -117,7 +116,7 @@ public class AlienManager {
 		
 	}
 
-	// Función boolean respecto a si todas las naves han salido del borde
+	// Funciï¿½n boolean respecto a si todas las naves han salido del borde
 	public boolean onBorder() {
 		
 		boolean on = false;
@@ -131,7 +130,7 @@ public class AlienManager {
 		
 	}
 
-	// Método que llama a la eliminación de un regularAlien
+	// Mï¿½todo que llama a la eliminaciï¿½n de un regularAlien
 	public void regularAlienDead() {
 		
 		remainingRAliens --;
@@ -140,7 +139,7 @@ public class AlienManager {
 		
 	}
 
-	// Método que llama a la eliminación de un destroyerAlien
+	// Mï¿½todo que llama a la eliminaciï¿½n de un destroyerAlien
 	public void destroyerAlienDead() {
 		
 		remainingDAliens --;
@@ -149,7 +148,7 @@ public class AlienManager {
 		
 	}
 	
-	// Método que elimina al jugador y finaliza el juego al haber llegado los aliens al final
+	// Mï¿½todo que elimina al jugador y finaliza el juego al haber llegado los aliens al final
 	public void finalRowReached() {
 		
 		squadInFinalRow = true;
@@ -158,17 +157,17 @@ public class AlienManager {
 		
 	}
 
-	// Función booleana respecto a la muerte de todos los aliens
+	// Funciï¿½n booleana respecto a la muerte de todos los aliens
 	public boolean allAlienDead() {	
 		return remainingAliens == 0;
 	}
 
-	// Función que devuelve el número de aliens restantes
+	// Funciï¿½n que devuelve el nï¿½mero de aliens restantes
 	public int getRemainingAliens() {
 		return remainingAliens;
 	}
 
-	public GameObjectContainer initialize() {
+	public GameObjectContainer initialize(InitialConfiguration conf) {
 		
 		// Variables
 		GameObjectContainer container;
@@ -177,42 +176,70 @@ public class AlienManager {
 		int row = 1;
 		int col = 2;
 		
-		// Instanciación de la lista 
+		// Instanciaciï¿½n de la lista 
 		container = new GameObjectContainer();
 		
-		// Regular aliens
-		
-		// Se añaden los aliens a la lista con sus correspondientes posiciones
-		for (int i = 0; i < level.getNumRegularAliens(); i++) {
+		if (conf.equals(InitialConfiguration.NONE)) {
+
+			remainingRAliens = level.getNumRegularAliens();
+			remainingDAliens = level.getNumDestroyerAliens();
+			remainingAliens = remainingRAliens + remainingDAliens;
 			
-			// Valores para la segunda fila de regular aliens
-			if (i == 4) {
-				row = 2;
-				col = 2;
+			// Regular aliens
+			
+			// Se aï¿½aden los aliens a la lista con sus correspondientes posiciones
+			for (int i = 0; i < level.getNumRegularAliens(); i++) {
+				
+				// Valores para la segunda fila de regular aliens
+				if (i == 4) {
+					row = 2;
+					col = 2;
+				}
+				
+				ra = new RegularAlien(new Position(col, row), game, this);
+				container.add(ra);
+				col ++;
 			}
 			
-			ra = new RegularAlien(new Position(col, row), game, level.getNumCyclesToMoveOneCell(), Move.LEFT, this);
-			container.add(ra);
-			col ++;
+			// Destroyer Aliens 
+			row = 2;
+			col = 0;
+			
+			// Si el nivel no es el EASY la fila de naves destructoras sera la 3
+			if (!level.equals(Level.EASY))
+				row = 3;
+			
+			// Creamos, posicionamos y aï¿½adimos las naves a la lista
+			for (int i = 0; i < level.getNumDestroyerAliens(); i++) {
+				col = i + 3;
+				if (level.equals(Level.INSANE))
+					col --;
+				da = new DestroyerAlien(new Position(col, row), game, this);
+				container.add(da);
+			}
+		} else {
+			
+			int numRA = 0;
+			int numDA = 0;
+			
+			for (String description : conf.getShipDescription()) {
+	            String[] parts = description.split(" ");
+	            char symbol = parts[0].charAt(0);
+	            int x = Integer.parseInt(parts[1]);
+	            int y = Integer.parseInt(parts[2]);
+	            container.add(ShipFactory.spawnAlienShip(symbol + "", game, new Position(x, y), this));
+	            if (symbol == 'R')
+	            	numRA++;
+	            else if (symbol == 'D')
+	            	numDA++;
+	        }
+			
+
+			remainingRAliens = numRA;
+			remainingDAliens = numDA;
+			remainingAliens = numRA + numDA;
+			
 		}
-		
-		// Destroyer Aliens 
-		row = 2;
-		col = 0;
-		
-		// Si el nivel no es el EASY la fila de naves destructoras sera la 3
-		if (!level.equals(Level.EASY))
-			row = 3;
-		
-		// Creamos, posicionamos y añadimos las naves a la lista
-		for (int i = 0; i < level.getNumDestroyerAliens(); i++) {
-			col = i + 3;
-			if (level.equals(Level.INSANE))
-				col --;
-			da = new DestroyerAlien(new Position(col, row), game, level.getNumCyclesToMoveOneCell(), Move.LEFT, this);
-			container.add(da);
-		}
-		
 		return container;
 		
 	}
